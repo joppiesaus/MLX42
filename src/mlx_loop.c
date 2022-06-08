@@ -6,7 +6,7 @@
 /*   By: W2Wizard <w2.wizzard@gmail.com>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/12/28 01:24:36 by W2Wizard      #+#    #+#                 */
-/*   Updated: 2022/04/13 00:24:53 by w2wizard      ########   odam.nl         */
+/*   Updated: 2022/06/08 18:00:56 by jobvan-d      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,22 @@ static void mlx_render_images(mlx_t* mlx)
 	}
 }
 
+// inner part of the mlx loop. Clear the screen, do the window stuff,
+// events etc. draw the image.
+static void mlx_loop_inner(mlx_t *mlx)
+{
+	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glfwGetWindowSize(mlx->window, &(mlx->width), &(mlx->height));
+
+	mlx_exec_loop_hooks(mlx);
+	mlx_render_images(mlx);
+	mlx_flush_batch(mlx->context);
+
+	glfwSwapBuffers(mlx->window);
+	glfwPollEvents();
+}
+
 //= Public =//
 
 bool mlx_loop_hook(mlx_t* mlx, void (*f)(void*), void* param)
@@ -95,15 +111,14 @@ void mlx_loop(mlx_t* mlx)
 		mlx->delta_time = start - oldstart;
 		oldstart = start;
 	
-		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glfwGetWindowSize(mlx->window, &(mlx->width), &(mlx->height));
-
-		mlx_exec_loop_hooks(mlx);
-		mlx_render_images(mlx);
-		mlx_flush_batch(mlx->context);
-
-		glfwSwapBuffers(mlx->window);
-		glfwPollEvents();
+		mlx_loop_inner(mlx);
 	}
+}
+
+// force-draws the screen, also processes hooks and such.
+void mlx_force_draw(mlx_t* mlx)
+{
+	MLX_ASSERT(!mlx);
+
+	mlx_loop_inner(mlx);
 }

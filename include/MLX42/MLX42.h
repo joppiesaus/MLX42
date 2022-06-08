@@ -6,7 +6,7 @@
 /*   By: W2Wizard <w2.wizzard@gmail.com>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/12/28 00:33:01 by W2Wizard      #+#    #+#                 */
-/*   Updated: 2022/05/10 10:23:50 by lde-la-h      ########   odam.nl         */
+/*   Updated: 2022/06/08 18:49:13 by jobvan-d      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -698,6 +698,9 @@ const mlx_texture_t* mlx_get_font(void);
  * @return Non-negative if found or -1 if not found.
  */
 int32_t mlx_get_texoffset(char c);
+
+// force-draws the screen, also processes hooks and such.
+void mlx_force_draw(mlx_t* mlx);
 
 # ifdef __cplusplus
 }
