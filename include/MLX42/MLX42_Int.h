@@ -6,7 +6,7 @@
 /*   By: W2Wizard <w2.wizzard@gmail.com>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/12/27 23:55:34 by W2Wizard      #+#    #+#                 */
-/*   Updated: 2022/05/10 10:24:39 by lde-la-h      ########   odam.nl         */
+/*   Updated: 2022/06/27 12:52:06 by lde-la-h      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,9 @@ typedef struct mlx_ctx
 	GLuint			vbo;
 	GLuint			shaderprogram;
 
+	uint32_t		initialWidth;
+	uint32_t		initialHeight;
+
 	mlx_list_t*		hooks;
 	mlx_list_t*		images;
 	mlx_list_t*		render_queue;
@@ -238,7 +241,6 @@ bool mlx_freen(int32_t count, ...);
 
 //= OpenGL Functions =//
 
-void mlx_on_resize(GLFWwindow* window, int32_t width, int32_t height);
 void mlx_update_matrix(const mlx_t* mlx, int32_t width, int32_t height);
 void mlx_draw_instance(mlx_ctx_t* mlx, mlx_image_t* img, mlx_instance_t* instance);
 void mlx_flush_batch(mlx_ctx_t* mlx);

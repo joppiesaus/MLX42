@@ -6,7 +6,7 @@
 /*   By: W2Wizard <w2.wizzard@gmail.com>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/12/28 00:33:01 by W2Wizard      #+#    #+#                 */
-/*   Updated: 2022/06/08 18:49:13 by jobvan-d      ########   odam.nl         */
+/*   Updated: 2022/06/27 18:34:55 by jobvan-d      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,14 @@ typedef struct xpm
  * @param x The x location.
  * @param y The y location.
  * @param z The z depth, controls if the image is on the fore or background.
+ * @param enabled If true, the instance is drawn else its not.
  */
 typedef struct mlx_instance
 {
 	int32_t	x;
 	int32_t	y;
 	int32_t	z;
+	bool	enabled;
 }	mlx_instance_t;
 
 /**
@@ -364,13 +366,14 @@ void mlx_get_window_pos(mlx_t* mlx, int32_t* xpos, int32_t* ypos);
 void mlx_set_window_size(mlx_t* mlx, int32_t new_width, int32_t new_height);
 
 /**
- * Sets a desired min and max window width and height.
+ * Sets the size limits of the specified window.
  * Will force the window to not be resizable past or below the given values.
- * Due to norme constraints this is a bit ugly, sorry.
  * 
  * @param mlx The MLX instance handle.
- * @param min_wh The min width and height values.
- * @param max_wh The max width and height values.
+ * @param min_w The min width of the window.
+ * @param max_w The max width of the window.
+ * @param min_h The min height of the window.
+ * @param max_h The max height of the window.
  */
 void mlx_set_window_limit(mlx_t* mlx, int32_t min_w, int32_t min_h, int32_t max_w, int32_t max_h);
 

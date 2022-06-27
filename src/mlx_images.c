@@ -6,7 +6,7 @@
 /*   By: W2Wizard <w2.wizzard@gmail.com>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/01/21 15:34:45 by W2Wizard      #+#    #+#                 */
-/*   Updated: 2022/05/15 20:57:16 by jsimonis      ########   odam.nl         */
+/*   Updated: 2022/06/27 14:10:21 by lde-la-h      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,6 @@ void mlx_draw_instance(mlx_ctx_t* mlx, mlx_image_t* img, mlx_instance_t* instanc
 	float z = (float) instance->z;
 	int8_t tex = mlx_bind_texture(mlx, img);
 
-	// NOTE: This is faster than uploading before hand!
-	// glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img->width, img->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img->pixels);
-
 	vertex_t vertices[6] = {
 			(vertex_t){x, y, z, 0.f, 0.f, tex},
 			(vertex_t){x + w, y + h, z, 1.f, 1.f, tex},
@@ -126,6 +123,7 @@ int32_t mlx_image_to_window(mlx_t* mlx, mlx_image_t* img, int32_t x, int32_t y)
 	// NOTE: We keep updating the Z for the convenience of the user.
 	// Always update Z depth to prevent overlapping images by default.
 	img->instances[index].z = ((mlx_ctx_t*)mlx->context)->zdepth++;
+	img->instances[index].enabled = true;
 
 	// Add draw call...
 	mlx_list_t* templst;

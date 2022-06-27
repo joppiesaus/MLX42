@@ -6,7 +6,7 @@
 /*   By: W2Wizard <w2.wizzard@gmail.com>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/12/28 01:24:36 by W2Wizard      #+#    #+#                 */
-/*   Updated: 2022/06/08 18:00:56 by jobvan-d      ########   odam.nl         */
+/*   Updated: 2022/06/27 18:34:24 by jobvan-d      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,24 +38,21 @@ static void mlx_render_images(mlx_t* mlx)
 		mlx_sort_renderqueue(&mlxctx->render_queue);
 	}
 
-	// Upload image textures to GPU
-	while (imglst)
+	// Upload to GPU
+	for (mlx_image_t* image = imglst->content; imglst; imglst = imglst->next)
 	{
-		mlx_image_t* image = imglst->content;
 		glBindTexture(GL_TEXTURE_2D, ((mlx_image_ctx_t*)image->context)->texture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->width, image->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
-		imglst = imglst->next;
-		// TODO: Remove this later, for now this fixes my issues.
 	}
 
 	// Execute draw calls
-	mlx_list_t* render_queue = mlxctx->render_queue;
-	while (render_queue)
+	for (mlx_list_t* render_queue = mlxctx->render_queue; render_queue; render_queue = render_queue->next)
 	{
 		draw_queue_t* drawcall = render_queue->content;
-		if (drawcall && drawcall->image->enabled)
-			mlx_draw_instance(mlx->context, drawcall->image, &drawcall->image->instances[drawcall->instanceid]);
-		render_queue = render_queue->next;
+		mlx_instance_t* instance =  &drawcall->image->instances[drawcall->instanceid];
+
+		if (drawcall && drawcall->image->enabled && instance->enabled)
+			mlx_draw_instance(mlx->context, drawcall->image, instance);
 	}
 }
 
@@ -66,6 +63,9 @@ static void mlx_loop_inner(mlx_t *mlx)
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glfwGetWindowSize(mlx->window, &(mlx->width), &(mlx->height));
+
+	if ((mlx->width > 1 || mlx->height > 1))
+		mlx_update_matrix(mlx, mlx->width, mlx->height);
 
 	mlx_exec_loop_hooks(mlx);
 	mlx_render_images(mlx);
